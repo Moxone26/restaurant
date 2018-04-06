@@ -1,0 +1,47 @@
+<h2><i class="fa fa-shopping-cart"></i> Passer une commande</h2>
+
+<form id="order-form" class="generic-form">
+    
+    <!-- Champ caché stockant le prix de vente du produit alimentaire sélectionné -->
+    <input type="hidden" name="price">
+    
+    <fieldset>
+        <legend>Ajouter un article</legend>
+        <ul>
+            <li>
+                <label for="meal">Nom :</label>
+                <select id="meal" name="meal">
+                    <?php foreach($meals as $meal): ?>
+                        <option value="<?= $meal['Id'] ?>"><?= $meal['Name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <article id="meal-details" class="meal-details no-left-label hidden">
+                    <img src="" alt="Photo du produit">
+                    <p></p>
+                    <span>Prix : <strong></strong></span>
+                </article>
+            </li>
+            <li>
+                <label for="quantity">Quantité :</label>
+                <select id="quantity" class="quantity" name="quantity">
+                    <?php for($i = 1 ; $i <= 10 ; $i++): ?>
+                        <option value="<?=$i;?>"><?=$i?></option>
+                    <?php endfor; ?>
+                </select>
+            </li>
+            <li>
+                <button id="addMealButton" class="button button-primary no-left-label" type="button">Ajouter</button>
+            </li>
+        </ul>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Récapitulatif de la commande</legend>
+        <section id="order-summary"></section>
+    </fieldset>
+</form>
+
+
+
+<script src="<?= $wwwUrl ?>/js/classes/BasketSession.class.js"></script>
+<script src="<?= $wwwUrl ?>/js/classes/OrderForm.class.js"></script>

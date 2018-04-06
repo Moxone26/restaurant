@@ -1,0 +1,34 @@
+<!-- Message de notification -->
+
+<!-- Code HTML à écrire -->
+
+
+<!-- Liste des aliments -->
+<h2>Notre carte</h2>
+
+<?php if (!empty($flashMessages)): ?>
+    <aside id="notice" class="notice">
+        <?php foreach($flashMessages as $message): ?>
+            <p><?= $message ?></p>
+        <?php endforeach; ?>
+    </aside>
+<?php endif; ?>
+
+<div id="restaurant-menu" class="owl-carousel">
+    <?php foreach($meals as $meal): ?>
+        <div class="restaurant-menu-item">
+            <article>
+                <h3><?= htmlspecialchars($meal['Name']) ?></h3>
+                
+                <p><?= htmlspecialchars($meal['Description']) ?></p>
+            
+                <span>Prix : <?= number_format(htmlspecialchars($meal['Price']), 2); ?> €</span>
+            </article>
+            
+            <!-- la variable $wwwUrl (créée par le framework) contient le début du chemin vers le répertoire www -->
+            <img src="<?= $wwwUrl;?>/images/meals/<?= htmlspecialchars($meal['Photo']); ?>" alt="<?= htmlspecialchars($meal['Name']) ?>" />
+        </div>
+    <?php endforeach; ?>
+</div> 
+     
+        

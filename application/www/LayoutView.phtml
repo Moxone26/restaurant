@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>3WA Restaurant</title>
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/normalize-3.0.3.min.css">
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/font-awesome-4.3.0.min.css">
+
+    <!-- Feuilles de styles de l'application -->
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/3wa-resto.css">
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/ui-button.css">
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/ui-form.css">
+    <link rel="stylesheet" href="<?= $wwwUrl ?>/css/ui-table.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps|Karla">
+
+    <!-- Librairie jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <!-- JavaScript de l'application -->
+    <script src="<?= $wwwUrl ?>/js/utilities.js"></script>
+</head>
+<body>
+
+<!-- En-tête commune -->
+<header>
+    <h1>
+        <a href="<?= $requestUrl ?>">
+            <img src="<?= $wwwUrl ?>/images/logo.gif" height="63" width="57" alt="3WA Restaurant">Restaurant - Made In America !
+        </a>
+    </h1>
+</header>
+
+<!-- Interface utilisateur -->
+<nav class="user-interface">
+    <ul class="link-list">
+        <!-- MENU SI l'UTILISATEUR N'EST PAS CONNECTE -->
+        <?php if ($userSession->isAuthenticated() == false): ?>
+            <li>
+                <a class="button button-primary" href="<?= $requestUrl ?>/user">Créer un compte</a>
+                <!-- Url réelle pour cloud9 Véro : https://veroniquecuomo-s4-veroniquecuomo.c9users.io/Restaurant/index.php/user -->
+            </li>
+            <li>
+                <a class="button button-primary" href="<?= $requestUrl ?>/user/login">Connexion</a>
+                <!-- Url réelle pour cloud9 Véro : https://veroniquecuomo-s4-veroniquecuomo.c9users.io/Restaurant/index.php/user/login -->
+            </li>
+        <!-- MENU SI l'UTILISATEUR EST CONNECTE -->    
+        <?php else : ?>
+            <li>
+                <a class="button button-primary" href="<?= $requestUrl ?>/order">Commander en ligne</a>
+                <!-- Url réelle pour cloud9 Véro : https://veroniquecuomo-s4-veroniquecuomo.c9users.io/Restaurant/index.php/order -->
+            </li>
+            <li class="layout-right">
+                <p>Bonjour <?= $userSession->getFirstName(); ?> <?= $userSession->getLastName(); ?> </p>
+                <a class="button button-primary" href="<?= $requestUrl ?>/user/logout">Déconnexion</a>
+                <!-- Url réelle pour cloud9 Véro : https://veroniquecuomo-s4-veroniquecuomo.c9users.io/Restaurant/index.php/user/logout -->
+            </li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
+<main>
+    <!-- Affichage du template lié à la vue -->
+    <?php include $this->viewData['template'] ?>
+</main>
+
+<!-- Pied de page commun -->
+<footer>
+    <ul class="link-list">
+        <li><img src="<?= $wwwUrl ?>/images/payment/visa.png" alt="Visa"></li>
+        <li><img src="<?= $wwwUrl ?>/images/payment/mastercard.png" alt="MasterCard"></li>
+        <li><img src="<?= $wwwUrl ?>/images/payment/paypal.png" alt="PayPal"></li>
+    </ul>
+    <small>Réalisé avec <i class="fa fa-heart"></i>&nbsp; par les élèves de la 3W Academy</small>
+</footer>
+
+<!-- Code principal JavaScript de l'application -->
+<script src="<?= $wwwUrl ?>/js/main.js"></script>
+
+</body>
+</html>

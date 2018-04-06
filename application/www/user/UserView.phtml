@@ -1,0 +1,75 @@
+<h2><i class="fa fa-user"></i> Création d'un compte client</h2>
+
+<form class="generic-form" action="<?= $requestUrl ?>/user" method="POST">
+	
+	<aside id="error-message">
+		<p><?= $errorMessage; ?></p>	
+	</aside>
+	
+    <fieldset>
+		<legend><i class="fa fa-book"></i> Identité et coordonnées</legend>
+		<ul>
+			<li>
+				<label for="lastName">Nom :</label>
+                <input type="text" name="lastName" id="lastName" value="<?= $lastName ?>" />
+            </li>
+            <li>
+				<label for="firstName">Prénom :</label>
+                <input type="text" name="firstName" id="firstName" value="<?= $firstName ?>" />
+            </li>
+            <li>
+                <label for="birthDay">Date de naissance :</label>
+				<select id="birthDay" name="birthDay">
+				    <?php for($day = 1; $day <= 31; $day++): ?>
+				        <option value="<?= $day ?>"><?= $day ?></option>
+				    <?php endfor; ?>
+				</select>
+				<select name="birthMonth">
+				    <?php foreach($months as $index => $month): ?>
+				        <option value="<?= $index+1 ?>"><?= $month ?></option>
+				    <?php endforeach; ?>
+				</select>   
+				<select name="birthYear">
+	                <?php for($year = 1920; $year <= date('Y') - 18; $year++): ?>
+	                    <option value="<?= $year; ?>"><?= $year; ?></option>
+	                <?php endfor; ?>
+				</select>
+		    </li>
+		    <li>
+				<label class="textarea" for="address">Adresse :</label>
+				<textarea id="address" name="address" rows="3"><?= $address ?></textarea>
+			</li>
+			<li>
+				<label for="city">Ville :</label>
+				<input id="city" type="text" name="city" value="<?= $city ?>" />
+			</li>
+			<li>
+				<label for="zipCode">Code postal :</label>
+				<input id="zipCode" type="text" name="zipCode" value="<?= $zipCode ?>" />
+			<li>
+				<label for="phone">Téléphone :</label>
+				<input id="phone" type="text" name="phone" value="<?= $phone ?>" />
+			</li>
+		</ul>
+	</fieldset>
+	<fieldset>
+		<legend><i class="fa fa-lock"></i> Informations d'authentification</legend>
+		<ul>
+	        <li>
+	            <label for="email">E-mail :</label>
+	            <input type="text" name="email" id="email" value="<?= $email ?>" />
+	        </li>
+	        <li>
+	            <label for="password">Mot de passe :</label>
+	            <input type="password" id="password" name="password" />
+	        </li>
+		</ul>
+	</fieldset>
+	
+	<ul>
+		<li>
+			<input class="button button-primary" type="submit" value="Créer le compte">
+			<a class="button button-cancel small" href="<?= $requestUrl ?>">Annuler</a>
+		</li>
+	</ul>
+</form>

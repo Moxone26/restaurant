@@ -1,0 +1,352 @@
+Architecture MVC
+================
+M : Modèle
+V : Vues
+C : Contrôleur
+
+[Tuto openclassrooms] https://openclassrooms.com/courses/apprendre-asp-net-mvc/le-pattern-mvc
+
+Modèle ( de données)
+--------------------
+L'entité qui va être responsable de la gestion des données du site (contenus)
+1 classe de modèle par table de la BDD
+
+Vues
+----
+La partie responsable de l'affichage des pages web
+Templates du site, càd les fichiers qui contiennent le code HTML
+1 fichier template par page
+    * Exemple : pour la page d'accueil, HomeView.phtml
+
+Contrôleur
+----------
+La partie qui va orchestrer les autres
+C'est le chef d'orchestre, c'est lui qui reçoit la requête HTTP et qui doit la traiter pour renvoyer la réponse au client
+1 classe contrôleur pour chaque page
+    * Exemple : pour la page d'accueil, c'est la classe HomeControlleur qui se trouve dans HomeControlleur.class.php
+
+
+
+
+Installation du restaurant
+==========================
+
+> Projet - Code Départ : dossier projet, code du framework 3WA
+> Projet - Données Départ : fichier data-restaurant.sql des données de tests à insérer dans la BDD (facultatif)
+> Projet - Ressources Départ : des ressources (images, css, fonts, etc) pour démarrer le projet
+
+1. Renommer le dossier "Projet - Code Départ" en "Restaurant"
+2. Fusionner le contenu de "Projet - Ressources Départ" avec "Projet - Code Départ"
+
+Projet - Ressources Départ                  Restaurant (ancien Projet - Code Départ)
+    application                                  application                                                                     
+        www                                           www                                    
+            css                =========>                                                   
+            fonts              =========>                                             
+            images             =========>            
+            
+> application : contient tous les fichiers de notre application (classes PHP, templates html, CSS, etc)
+    > config : contient les fichiers de configuration de l'application
+        > database.php : contient la configuration de la BDD
+    > controllers : contient les contrôleurs
+    > www : dossier public accessible par les internautes
+        > css
+        > images
+        > js 
+        > fonts
+        LayoutView.phtml : template global commun à toutes les pages du site
+    
+> library     : les fichiers du framework
+
+Création de la base de données
+==============================
+
+Pour stocker les plats de la carte on va créer une table Meal
+
+    ========
+    = Meal =
+    ========
+    * Id (int, clé primaire, auto-incrément)
+    * Name : nom des plats / varchar(255)
+    * Description : description du plat / varchar(512)
+    * Photo : nom du fichier image  / varchar(255)
+    * Price : prix en euros / float
+    
+    1. Créer dans phpmyadmin une base de données 'restaurant'
+    2. Créer la table Meal 
+    3. Insérer des données de tests directement dans phpmyadmin
+    
+    Requête à coller dans l'onglet SQL de phpmyadmin et à exécuter pour récupérer des données de type fast-food :
+    
+        INSERT INTO `Meal` (`Name`, `Description`, `Photo`, `Price`) VALUES
+        ('Coca-Cola', 'Mmmm, le Coca-Cola avec 10 morceaux de sucres et tout plein de caféine !', 'coca.jpg', 3),
+        ('Bagel Thon', 'Notre bagel est constitué d''un pain moelleux avec des grains de sésame et du thon albacore, accompagné de feuilles de salade fraîche du jour  et d''une sauce renversante :-)', 'bagel_thon.jpg', 5.5),
+        ('Bacon Cheeseburger', 'Ce délicieux cheeseburger contient un steak haché viande française de 150g ainsi que d''un buns grillé juste comme il faut, le tout accompagné de frites fraîches maison !', 'bacon_cheeseburger.jpg', 12.5),
+        ('Carrot Cake', 'Le carrot cake maison ravira les plus gourmands et les puristes : tous les ingrédients sont naturels !\r\nÀ consommer sans modération', 'carrot_cake.jpg', 6.75),
+        ('Donut Chocolat', 'Les donuts sont fabriqués le matin même et sont recouvert d''une délicieuse sauce au chocolat !', 'chocolate_donut.jpg', 6.2),
+        ('Dr. Pepper', 'Son goût sucré avec de l''amande vous ravira !', 'drpepper.jpg', 2.9),
+        ('Milkshake', 'Notre milkshake bien crémeux contient des morceaux d''Oréos et est accompagné de crème chantilly et de smarties en guise de topping. Il éblouira vos papilles !', 'milkshake.jpg', 5.35);
+   
+   
+Création de la page d'accueil
+=============================
+=> 1. Créer un modèle pour aller récupérer les données dans la BDD : une classe MealModel (dans un dossier "models" à créer) avec une méthode listAll()
+        Rem. : le framework fournit une classe Database qu'on va pouvoir utiliser
+        Rem. : renseigner le fichier config/database.php avec les données de connexions à la BDD
+=> 2. Utiliser ce modèle pour récupérer la liste des plats ( dans le fichier HomeController.class.php dans la méthode httpGetMethod() )
+=> 3. Créer la vue HTML (dans le fichier HomeView.phtml) et transmettre les données du contrôleur à la vue
+
+
+Création du formulaire de création de compte client
+===================================================
+
+ -> 1. Créer une table User dans la BDD pour stocker les utilisateurs (phpmyadmin)
+ 
+    ========
+    = User =
+    ========
+    * Id : clé primaire, identifiant [int, PRIMARY, A.I.]
+    * LastName : nom de famille [varchar(255)]
+    * FirstName : prénom [varchar(255)]
+    * BirthDate : date de naissance [Date] Rappel : format SQL : 'aaaa-mm-jj'
+    * Address : adresse [varchar(512)]
+    * City : ville [varchar(255)]
+    * ZipCode : code postal [varchar(6)]
+    * Phone : téléphone [varchar(12)]
+    * Email : email [varchar(255)]
+    * Password : mot de passe [varchar(255)]
+    * CreatedAt : date et heure de création du compte [DateTime]
+    * LastLoginAt : date et heure de dernière connexion [DateTime]
+    
+-> 2. Créer le code HTML du formulaire (fichier www/user/UserView.phtml)
+        > Remarque : l'action du formulaire est l'url de la page courante, c'est-à-dire la même que le lien "Créer son compte"
+
+-> 3. Insérer les données du formulaire dans la table User
+        * Méthode httpPostMethod du UserController (fichier controllers/user/UserController.class.php)
+        * Créer un modèle UserModel dans le dossier models et une méthode signUp() (fichier models/UserModel.class.php)
+        
+-> 4. Faire une redirection vers la page d'accueil (dont l'url est "/") en utilisant l'objet Http récupéré en 1er paramètre de httpPostMethod()
+
+Vérifier que l'adresse email fournie par l'utilisateur n'est pas déjà présente dans la base
+===========================================================================================
+AVANT de faire la requête d'insertion, vérifier que l'email n'existe pas déjà dans la BDD
+
+Si il existe => on lance une exception et on ne fait pas la requête d'insertion
+Sinon si il n'existe pas => on fait la requête d'insertion
+
+
+Création du formulaire de connexion
+===================================
+
+    1. Créer un formulaire (Email/Mot de passe) sur une page dont la route sera : /user/login
+    
+        * Créer un contrôleur LoginController dans le dossier application/controllers/user/login/
+        * Créer une vue LoginView.phtml dans le dossier application/www/user/login/
+        
+        -> Affichage du formulaire : httpGetMethod()
+        -> Traitement du formulaire : httpPostMethod()
+        
+    2. Vérifier les identifiants
+    
+        * Est-ce que l'email existe dans la BDD dans la table User ?
+        * Est-ce que le mot de passe associé est le bon ?
+        
+        -> Dans la classe UserModel, créer une méthode signIn()
+            - Si les identifiants sont valides : signIn() va retourner les infos de l'utilisateur
+            - Si il y a un problème : on lance une exception
+            
+        > Rem. : si les identifiants sont inccorects on reste sur le formulaire => affichage d'un message + remplissage du champ email
+            
+    3. Enregistrement des informations utilisateur en session
+    
+        -> Créer une classe UserSession
+            * méthode create() : ajouter l'utilisateur en session
+            * méthode isAuthenticated() : est-ce que l'utilisateur est connecté ou non ?
+            * méthodes "getters" pour récupérer les infos de l'utilsiateur connecté : getFirstname(), getLastname(), etc.
+    
+    4. Redirection vers la page d'accueil avec affichage d'un message falsh
+
+
+Améliorations de la connexion
+=============================
+[ DONE ] -> Créer une méthode dédiée verifyPassword($motDePasseForm, $motDePasseBDD) pour la vérification du mot de passe dans la classe UserModel
+                            * retourne true si les mots de passe sont identiques
+                            * retourne false si les mots de passe sont différents
+[ DONE ] -> Ajouter un message flash lors de la connexion utilisateur
+[ DONE ] -> Afficher un message d'erreur et remplir le champ email en cas d'erreur 
+                            * créer une classe LoginForm
+                            * retourner un objet LoginForm dans le LoginController (prendre exemple sur la classe UserController)
+
+
+Mise à jour du menu de navigation
+=================================
+[ DONE ] Afficher les boutons "Créer un compte" et "Connexion" si l'utilisateur n'est pas connecté
+[ DONE ] Afficher les boutons "Commander" et "Déconnexion" si l'utilisateur est connecté
+[ DONE ] Afficher "Bonjour prénom nom" si l'utilisateur est connecté
+
+
+Déconnexion
+===========
+-> Route de déconnexion : /user/logout
+-> Créer un contrôleur LogoutController qui déconnectera l'utilisateur via une méthode logout() de la classe UserSession. 
+    => Méthode logout() :
+         * Effacer les données utilisateurs enregistrées dans $_SESSION['user']
+         * Détruire la session avec session_destroy()
+    => L'utilisateur sera redirigé vers la page d'accueil.
+
+Mise à jour date de dernière connexion
+======================================
+-> Créer une méthode "updateLastLogin" dans le UserModel pour mettre à jour la date de dernière connexion (champ LastLoginAt)
+
+    Note
+    ----
+        Pour modifier le timezone sur le serveur cloud9 :
+            1) Ouvir fenetre terminal ALT + T
+            2) sudo dpkg-reconfigure tzdata
+                -> Choisir Europe puis Paris
+
+
+Hashage du mot de passe
+===========================
+1. Hasher le mot de passe lors de l'enregistrement d'un utilisateur en base de données
+2. Tester le mot de passe hashé lors de la connexion
+
+2 méthodes principales pour "coder" un message (chaîne de caractères)
+
+1) Chiffrement
+
+    * 3 éléments pour chiffrer
+        - un message 
+        - une clé
+        - algorithme
+        
+    * caractéristique du chiffrement :
+        - à double-sens : on peut retrouver le message initial si on possède la clé avec laquelle il a été codé
+        - il n'y a pas de perte de données
+        
+2) Hashage <= utilisé pour les mots de passe en BDD
+
+    * 3 éléments pour hasher une chaîne
+        - un message 
+        - un sel 
+        - algorithme
+        
+    * caractéristique du hashage
+        - il y a perte d'informations
+        - à sens unique : on ne pourra jamais retrouver le message initial
+        - le hashage produit un résultat unique et invariant
+        
+En PHP :
+
+    * pour hasher un mot de passe : password_hash()   [http://php.net/manual/fr/function.password-hash.php]
+    * pour vérifier la validité d'un mot de passe : password_verify()    [http://php.net/manual/fr/function.password-verify.php]
+
+    -> Au moment de l'enregistrement en BDD : il va falloir hasher le mot de passe ( dans la méthode signUp() du UserModel )
+    -> Au moment de la connexion : on va vérifier le mot de passe avec la fonction password_verify()  ( dans la méthode verifyPassword du UserModel )
+
+
+Formulaire de commande
+======================
+-> Route du formulaire de commande : /order
+-> Création d'un contrôleur OrderController
+-> Création d'un template OrderView.phtml
+
+* Etape 1 : afficher la liste déroulante des produits
+
+* Etape 2 : afficher le résumé du produit sélectionné dans la liste
+
+    Méthode onChangeMeal
+    ===================
+    1. Récupérer l'id du plat sélectionné
+        > Rappel : dans un gestionnaire d'événement, le mot-clé this par défaut contient l'élément du DOM qui a déclenché l'événement
+        > Pour modifier la valeur de this dans un objet de la classe Function, 
+    2. Envoyer une requête Ajax vers le serveur, vers la route /meal en transmettant l'id du plat
+        > Rem. : utiliser la fonction getRequestUrl() pour construire l'url de la requête Ajax ( ..../index.php/meal.... )
+        > Ajax en jQuery : $.post(), $.get(), $.ajax(), .load(), $.getScript(), >>>>>  $.getJSON()  <<<<<
+        
+    Côté serveur
+    ============
+    3. Créer le contrôleur MealController + méthode find($mealId) dans le MealModel pour récupérer les données du plat en BDD
+    4. Retourner les données au format JSON en réponse à la requête Ajax
+    
+    Méthode onAjaxChangeMeal 
+    ========================
+    -> Fonction de callback qui reçoit en paramètre la réponse HTTP du serveur (le JSON est automatiquement décodé par $.getJSON() )
+    
+    5. Récupérer les données dans le callback côté client en javascript et insérer les données dans des balises HTML du OrderView.phtml
+    
+    6. Déclencher artificiellement l'événement 'change' sur la liste déroulante avec la méthode trigger() de jQuery 
+       pour que le premier article soit affiché dès le chargement de la page
+    
+* Etape 3
+* Etape 3.1 : Ajouter l'article sélectionné au panier
+
+    3.1.1 Ajouter un champ quantité (liste déroulante name="quantity") et un bouton "Ajouter au panier" dans le formulaire de commande
+            
+        > Rem. le bouton "Ajouter au panier" est un simple bouton de type "button". Le formulaire ne sera jamais réellement soumis.
+    
+    3.1.2 Installer un gestionnaire d'événement au clic sur le bouton "Ajouter au panier" (nommé "onClickAddMeal")
+    
+        > Rem. : onClickAddMeal sera une méthode supplémentaire dans la classe OrderForm
+    
+    3.1.3 Au clic sur le bouton "Ajouter", ajouter l'article au panier (Id, Quantité, Nom, Description)
+    
+        => On va récupérer les informations du produit directement dans le code HTML 
+            - Id
+            - Quantité
+            - Nom
+            - Prix (il faudra sans doute ajouter un champ caché dans le form pour stocker et récupérer le prix)
+            
+        => Pour stocker le panier on va créer une classe BasketSession avec une propriété items qui stockera un tableau d'objets
+           -> Une méthode add() permettra d'ajouter un élément au panier, on lui donnera les 4 informations en paramètres
+           -> On stocke ces 4 informations dans un objet qu'on ajoutera au tableau items
+           
+           /!\ Si le produit est déjà présent dans le tableau, il faut mettre simplement à jour la quantité
+           
+* Etape 3.2 : Mettre à jour l'affichage du panier
+
+    Pour mettre à jour l'affichage du panier, on créera une méthode refreshOrderSummary() dans la classe OrderForm
+    Cette méthode enverra une requête Ajax à l'url /basket en transmettant les données du panier (le contenu de la propriété items)
+    On recevra en réponse le code HTML du panier à remplacer dans la page 
+    
+    Il faudra créer :
+        * un contrôleur BasketController
+        * une vue BasketView.phtml
+        
+    > Rem. : pour ne pas générer tout le code HTML du LayoutView mais seulement le code de BasketView, il existe une clé spéciale
+           à retourner dans le tableau associatif des contrôleurs : _raw_template dont la valeur doit être true
+        
+
+* Etape 3.3 : utiliser le locaStorage pour stocker le panier le temps de la session utilisateur
+
+    -> Enregistrer le panier dans le localStorage à chaque fois qu'il est modifié
+    
+        * Créer une méthode save() dans la classe BasketSession
+        * Utiliser la fonction utilitaire saveDataToDomStorage()
+    
+    -> Récupérer le panier du localStorage au chargement de la page
+    
+        * Créer une méthode load() dans la classe BasketSession
+        * Utiliser la fonction utilitaire loadDataFromDomStorage()
+        
+    => Prendre exemple sur les fonction saveAddressBook() et loadAddressBook() de l'exercice 
+    
+
+* Etape 3.4 : suppression d'un élément du panier
+
+    1. Installation d'un gestionnaire d'événement au clic sur les boutons "Supprimer"
+    
+        -> dans la méthode init() de OrderForm
+         
+        /!\ Au chargement de la page, les boutons n'existent pas encore (ils sont générés en PHP suite à une requête Ajax)
+
+    2. Créer un gestionniare d'événement "onClickRemoveBasketItem", qui sera une méthode de la classe OrderForm
+    
+        -> Supprimer l'élément cliqué du panier 
+            
+            * Créer une méthode remove() dans la classe BasketSession() qui prendra en paramètre l'id de l'élément à supprimer
+            
+            > Rem. : pour supprimer un élément d'un tableau il existe une méthode splice() dans la classe Array de javascript
+        
+        -> Mettre à jour le panier dans le localStorage
+        -> rafraichir l'affichage du panier
